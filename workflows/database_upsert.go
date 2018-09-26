@@ -3,6 +3,7 @@ package workflows
 import (
 	"crypto/rand"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 
@@ -104,10 +105,21 @@ func (workflow *databaseWorkflow) databaseDeployer(namespace string, service *co
 
 		//DatabaseMasterPassword:
 		dbPass, err := paramManager.GetParam(fmt.Sprintf("%s-%s", dbStackName, "DatabaseMasterPassword"))
+
+		// TODO: Handle param not found better
 		if err != nil {
 			log.Warningf("Error with GetParam for DatabaseMasterPassword, assuming empty: %s", err)
+			answer, err := common.Prompt("Error retrieving DatabaseMasterPassword. Set a new DatabaseMasterPassword", false)
+			if err != nil {
+				log.Errorf("Error with command input: %s", err)
+				os.Exit(1)
+			}
+			if !answer {
+				os.Exit(126)
+			}
 			dbPass = ""
 		}
+
 		if dbPass == "" {
 			dbPass = randomPassword(32)
 			err = paramManager.SetParam(fmt.Sprintf("%s-%s", dbStackName, "DatabaseMasterPassword"), dbPass, workflow.databaseKeyArn)

@@ -75,7 +75,7 @@ func TestDatabaseUpserter(t *testing.T) {
 	rdsManager.On("SetIamAuthentication", mock.Anything).Return(nil)
 
 	paramManager := new(mockedParamManager)
-	paramManager.On("GetParam", "mu-database-foo-dev-DatabaseMasterPassword").Return("dbpass", nil)
+	paramManager.On("GetParam", "mu-database-foo-dev-DatabaseMasterPassword").Return("foo", nil)
 
 	config := new(common.Config)
 	config.Service.Name = "foo"

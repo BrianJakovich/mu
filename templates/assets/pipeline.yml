@@ -122,6 +122,13 @@ Parameters:
     AllowedValues:
       - "true"
       - "false"
+  EnableManualApproval:
+    Type: String
+    Description: Enable manual approval action
+    Default: "true"
+    AllowedValues:
+      - "true"
+      - "false"
   CodePipelineKeyArn:
     Type: String
     Description: KMS key for CodePipeline
@@ -167,6 +174,10 @@ Parameters:
     MinValue: 5
     MaxValue: 480
 Conditions:
+  IsManualApprovalEnabled:
+    "Fn::Equals":
+      - !Ref EnableManualApproval
+      - 'true'
   IsS3:
     "Fn::And":
     - "Fn::Equals":
@@ -498,6 +509,18 @@ Resources:
         - IsProdEnabled
         - Name: Production
           Actions:
+          - Fn::If:
+            - IsManualApprovalEnabled
+            - Name: Approve
+              ActionTypeId:
+                Category: Approval
+                Owner: AWS
+                Version: '1'
+                Provider: Manual
+              Configuration:
+                  CustomData: Approve deployment to production
+                  NotificationArn: !Ref PipelineNotificationTopic
+              RunOrder: 10
           - Name: Approve
             ActionTypeId:
               Category: Approval

@@ -230,6 +230,9 @@ type Pipeline struct {
 	Production struct {
 		Disabled    bool   `yaml:"disabled,omitempty"`
 		Environment string `yaml:"environment,omitempty"`
+		Actions     struct {
+       		ManualApproval bool `yaml:"manualapproval,omitempty"`
+    	} `yaml:"actions,omitempty"`
 		Roles       struct {
 			CodeBuild string `yaml:"codeBuild,omitempty" validate:"validateRoleARN"`
 			Mu        string `yaml:"mu,omitempty" validate:"validateRoleARN"`

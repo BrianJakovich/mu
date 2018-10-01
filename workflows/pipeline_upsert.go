@@ -266,6 +266,7 @@ func PipelineParams(workflow *pipelineWorkflow, namespace string, params map[str
 	pipelineParams["EnableBuildStage"] = strconv.FormatBool(!workflow.pipelineConfig.Build.Disabled)
 	pipelineParams["EnableAcptStage"] = strconv.FormatBool(!workflow.pipelineConfig.Acceptance.Disabled)
 	pipelineParams["EnableProdStage"] = strconv.FormatBool(!workflow.pipelineConfig.Production.Disabled)
+	pipelineParams["EnableManualApproval"] = strconv.FormatBool(!workflow.pipelineConfig.Production.Actions.ManualApproval)
 
 	// get default buildspec
 	buildspec, err := templates.GetAsset(common.TemplateBuildspec,
